@@ -6,11 +6,9 @@ import (
 )
 
 func TestFromReader(t *testing.T) {
-	// reader := ioutil.R
 }
 
 func TestFromUrl(t *testing.T) {
-
 }
 
 func TestFromBytes(t *testing.T) {
@@ -22,7 +20,6 @@ func TestFromBytes(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ioutil.WriteFile("foo.txt", []byte(ocr), 0x7777)
 	expected := `Although Google's API is certainly better, Tesseract.js should work similarly if you increase the font size.
 Screenshots taken on 'retina' devices are around the smallest text it can handle well.
 
