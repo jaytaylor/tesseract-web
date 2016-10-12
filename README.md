@@ -24,21 +24,23 @@
 
 ## Run it
 
-    tesseract-web -web -bind 127.0.0.1:8080
+    tesseract-web -bind 127.0.0.1:8080
 
 ## Example usage:
 
 Remote URL:
 
-    curl -v -XPOST localhost:8080/v1/tesseract/https://i.imgur.com/14y5P0u.png
+    curl -XPOST localhost:8080/v1/tesseract/https://i.imgur.com/14y5P0u.png
 
 Upload image:
 
-    curl -v -XPOST localhost:8080/v1/tesseract -d@path/to/some/image.jpg
+    curl -XPOST localhost:8080/v1/tesseract -d@path/to/some/image.jpg
 
 ## Run the tests
 
     make test
+    # or
+    go test ./...
 
 or for verbose output:
 
@@ -66,7 +68,6 @@ GLOBAL OPTIONS:
    --install               Install tesseract-web as a system service (default: false)
    --uninstall             Uninstall tesseract-web as a system service (default: false)
    --user value, -u value  Specifies the user to run the tesseract-web system service as (will default to "jay") (default: "jay")
-   --web, -w               Starts in web-server mode (default: false)
    --bind value, -b value  Set the web-server bind-address and (optionally) port (default: "0.0.0.0:8080")
    --help, -h              show help (default: false)
    --version, -v           print the version (default: false)

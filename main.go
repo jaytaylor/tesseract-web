@@ -58,7 +58,6 @@ func main() {
 		install     bool
 		uninstall   bool
 		serviceUser string = os.Getenv("USER")
-		web         bool
 		bindAddr    string = "0.0.0.0:8080"
 	)
 
@@ -84,12 +83,6 @@ func main() {
 				Value:       serviceUser,
 				Destination: &serviceUser,
 			},
-			&cli.BoolFlag{
-				Name:        "web",
-				Aliases:     []string{"w"},
-				Usage:       "Starts in web-server mode",
-				Destination: &web,
-			},
 			&cli.StringFlag{
 				Name:        "bind",
 				Aliases:     []string{"b"},
@@ -99,7 +92,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			log.Infof("c.Args=%v c.FlagNames=%v", c.Args(), c.FlagNames())
+			// log.Infof("c.Args=%v c.FlagNames=%v", c.Args(), c.FlagNames())
 			if uninstall || install {
 				if uninstall {
 					config := upstart.DefaultConfig(c.App.Name)
