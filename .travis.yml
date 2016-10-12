@@ -1,0 +1,14 @@
+language: go
+go:
+  - tip
+  - 1.7
+  - 1.6
+  - 1.5
+install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
+  - go get -t ./...
+notifications:
+  email:
+    on_success: change
+    on_failure: always
