@@ -79,7 +79,7 @@ func main() {
 			&cli.StringFlag{
 				Name:        "user",
 				Aliases:     []string{"u"},
-				Usage:       fmt.Sprintf("Specifies the user to run the %s system service as (will default to %q)", AppName, serviceUser),
+				Usage:       fmt.Sprintf("Specifies the user to run the %s system service as", AppName),
 				Value:       serviceUser,
 				Destination: &serviceUser,
 			},

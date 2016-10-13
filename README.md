@@ -67,7 +67,7 @@ COMMANDS:
 GLOBAL OPTIONS:
    --install               Install tesseract-web as a system service (default: false)
    --uninstall             Uninstall tesseract-web as a system service (default: false)
-   --user value, -u value  Specifies the user to run the tesseract-web system service as (will default to "jay") (default: "jay")
+   --user value, -u value  Specifies the user to run the tesseract-web system service as (default: "jay")
    --bind value, -b value  Set the web-server bind-address and (optionally) port (default: "0.0.0.0:8080")
    --help, -h              show help (default: false)
    --version, -v           print the version (default: false)
