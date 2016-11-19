@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/gigawattio/go-commons/pkg/upstart"
+	"github.com/gigawattio/upstart"
 	"github.com/jaytaylor/tesseract-web/interfaces"
 	"gopkg.in/urfave/cli.v2"
 )

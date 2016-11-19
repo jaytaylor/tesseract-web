@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gigawattio/go-commons/pkg/web"
-	"github.com/gigawattio/go-commons/pkg/web/generics"
-	"github.com/gigawattio/go-commons/pkg/web/route"
+	"github.com/gigawattio/web"
+	"github.com/gigawattio/web/generics"
+	"github.com/gigawattio/web/route"
 	"github.com/jaytaylor/tesseract-web/pkg/tesseract"
 	"github.com/nbio/hitch"
 )

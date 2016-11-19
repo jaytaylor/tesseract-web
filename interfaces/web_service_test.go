@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gigawattio/go-commons/pkg/web"
+	"github.com/gigawattio/web"
 )
 
 const (
