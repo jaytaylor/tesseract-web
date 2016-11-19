@@ -2,121 +2,42 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"os"
-	"os/signal"
-	"strings"
 
-	log "github.com/Sirupsen/logrus"
-	"github.com/gigawattio/upstart"
 	"github.com/jaytaylor/tesseract-web/interfaces"
-	"gopkg.in/urfave/cli.v2"
+
+	"github.com/gigawattio/web/cli"
+	webinterfaces "github.com/gigawattio/web/interfaces"
+	cliv2 "gopkg.in/urfave/cli.v2"
 )
 
 const (
 	AppName = "tesseract-web"
 )
 
-var (
-	webService *interfaces.WebService
-)
-
-func runWeb(addr string) error {
-	webService = interfaces.NewWebService(addr)
-	if err := webService.Start(); err != nil {
-		return err
-	}
-	log.Printf("Successfully started web service on addr=%v\n", webService.Addr())
-
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt)
-
-	<-sig // Wait for ^C signal
-	fmt.Fprintln(os.Stderr, "\nInterrupt signal detected, shutting down..")
-
-	if err := webService.Stop(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func errorExit(err error, exitStatusCode int) {
-	os.Stderr.WriteString("error: " + err.Error() + "\n")
-	os.Exit(exitStatusCode)
+func webServiceProvider(ctx *cliv2.Context) (webinterfaces.WebService, error) {
+	webService := interfaces.NewWebService(ctx.String("bind"))
+	return webService, nil
 }
 
 func getVersion() string {
 	buf := &bytes.Buffer{}
 	DisplayVersion(buf, "\n")
-	v := strings.TrimSpace(buf.String())
+	v := buf.String()
 	return v
 }
 
 func main() {
-	var (
-		install     bool
-		uninstall   bool
-		serviceUser string = os.Getenv("USER")
-		bindAddr    string = "0.0.0.0:8080"
-	)
-
-	app := &cli.App{
-		Name:    AppName,
-		Version: getVersion(),
-		Usage:   "Exposes tesseract image OCR as a set of web APIs",
-		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name:        "install",
-				Usage:       fmt.Sprintf("Install %s as a system service", AppName),
-				Destination: &install,
-			},
-			&cli.BoolFlag{
-				Name:        "uninstall",
-				Usage:       fmt.Sprintf("Uninstall %s as a system service", AppName),
-				Destination: &uninstall,
-			},
-			&cli.StringFlag{
-				Name:        "user",
-				Aliases:     []string{"u"},
-				Usage:       fmt.Sprintf("Specifies the user to run the %s system service as", AppName),
-				Value:       serviceUser,
-				Destination: &serviceUser,
-			},
-			&cli.StringFlag{
-				Name:        "bind",
-				Aliases:     []string{"b"},
-				Usage:       "Set the web-server bind-address and (optionally) port",
-				Value:       bindAddr,
-				Destination: &bindAddr,
-			},
-		},
-		Action: func(c *cli.Context) error {
-			// log.Infof("c.Args=%v c.FlagNames=%v", c.Args(), c.FlagNames())
-			if uninstall || install {
-				if uninstall {
-					config := upstart.DefaultConfig(c.App.Name)
-					if err := upstart.UninstallService(config); err != nil {
-						return err
-					}
-				}
-				if install {
-					config := upstart.DefaultConfig(c.App.Name)
-					config.User = serviceUser
-					if err := upstart.InstallService(config); err != nil {
-						return err
-					}
-				}
-				return nil
-			}
-
-			if err := runWeb(bindAddr); err != nil {
-				return err
-			}
-			return nil
-		},
+	options := cli.Options{
+		AppName:            AppName,
+		Usage:              "Exposes tesseract image OCR as a set of web APIs",
+		Version:            getVersion(),
+		WebServiceProvider: webServiceProvider,
+		ExitOnError:        true,
 	}
-	if err := app.Run(os.Args); err != nil {
-		errorExit(err, 1)
+	c, err := cli.New(options)
+	if err != nil {
+		cli.ErrorExit(os.Stderr, err, 1)
 	}
+	c.Main()
 }
