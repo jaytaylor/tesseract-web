@@ -30,7 +30,7 @@ RM := rm -rf
 # Automatically discover all buildable targets (binaries).
 BUILDABLE_PACKAGES_INFO := $(shell \
 	test -r .Makefile.packages.cache && cat .Makefile.packages.cache \
-	|| set -x && \
+	|| ( \
 	find . \
 		-not \( -path ./vendor -prune \) \
 		-not \( -path ./Godeps -prune \) \
@@ -41,7 +41,7 @@ BUILDABLE_PACKAGES_INFO := $(shell \
 	| xargs -n1 -IX bash -c '( cd "$$(dirname "X")" && go list && cd - 1>/dev/null ) | sed "s|^\(.*\/\)\{0,1\}\(.*\)|`dirname "X"`\/\2:X|"' \
 	| sed 's/:\(.*\)\(\/.*\.go\)/:\1:\1\2/' \
 	| uniq \
-	| tee .Makefile.packages.cache \
+	| tee .Makefile.packages.cache ) \
 )
 BINARY_ARTIFACTS := $(foreach PACKAGE_INFO,$(BUILDABLE_PACKAGES_INFO), \
 	$(eval ARTIFACT = $(word 1,$(subst :, ,$(PACKAGE_INFO)))) $(ARTIFACT) \
